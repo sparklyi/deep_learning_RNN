@@ -103,7 +103,7 @@ class RNNClassifier(torch.nn.Module):
         return create_tensor(hidden)
 
     def forward(self, input, seq_lengths):
-        input = input.t()  # 转置 t -> transpose: input shape : B x S -> S x B
+        input = input.t()  # 转置 t -> transpose: input shape : B x A -> A x B
         batch_size = input.size(1)
 
         hidden = self._init_hidden(batch_size)  # h0
@@ -146,7 +146,7 @@ def make_tensors(natural, Major):
     sequences_and_lengths = [natural2list(name) for name in natural]
     name_sequences = [sl[0] for sl in sequences_and_lengths]
     seq_lengths = torch.LongTensor([sl[1] for sl in sequences_and_lengths])
-    Major = Major.long()  # Major：国家索引
+    Major = Major.long()
 
     # make tensor of name, BatchSize x SeqLen
     seq_tensor = torch.zeros(len(name_sequences), seq_lengths.max()).long()
@@ -262,15 +262,14 @@ if __name__ == '__main__':
         # 保存模型
         torch.save(model.state_dict(), 'model.pth')
     else:
-        pass
-        # model = RNNClassifier(N_CHARS, HIDDEN_SIZE, N_major, N_LAYER)
-        # model.load_state_dict(torch.load('model.pth', weights_only=False))
-        # model.eval()
-        #
-        # while 1:
-        #     user_input = input('input:')
-        #     if user_input == 'exit':
-        #         break
-        #     predicted_major = predict(user_input)
-        #     print(f"预测答案: {predicted_major}")
+        model = RNNClassifier(N_CHARS, HIDDEN_SIZE, N_major, N_LAYER)
+        model.load_state_dict(torch.load('model.pth', weights_only=False))
+        model.eval()
+
+        while 1:
+            user_input = input('input:')
+            if user_input == 'exit':
+                break
+            predicted_major = predict(user_input)
+            print(f"预测答案: {predicted_major}")
 
