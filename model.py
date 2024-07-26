@@ -230,7 +230,8 @@ def predict(natural):
 
 if __name__ == '__main__':
     sele = input("1.训练模型， 0.测试模型")
-    if sele == 1:
+    print(sele)
+    if sele == "1":
         if USE_GPU:
             device = torch.device("cuda:0")
             model.to(device)
@@ -261,14 +262,15 @@ if __name__ == '__main__':
         # 保存模型
         torch.save(model.state_dict(), 'model.pth')
     else:
-        model = RNNClassifier(N_CHARS, HIDDEN_SIZE, N_major, N_LAYER)
-        model.load_state_dict(torch.load('model.pth',weights_only=True))
-        model.eval()
-
-        while 1:
-            user_input = input('input:')
-            if user_input == 'exit':
-                break
-            predicted_major = predict(user_input)
-            print(f"预测答案: {predicted_major}")
+        pass
+        # model = RNNClassifier(N_CHARS, HIDDEN_SIZE, N_major, N_LAYER)
+        # model.load_state_dict(torch.load('model.pth', weights_only=False))
+        # model.eval()
+        #
+        # while 1:
+        #     user_input = input('input:')
+        #     if user_input == 'exit':
+        #         break
+        #     predicted_major = predict(user_input)
+        #     print(f"预测答案: {predicted_major}")
 
