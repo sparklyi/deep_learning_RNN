@@ -1,5 +1,7 @@
 import math
 import time
+
+import jieba
 import torch
 # 绘图
 import matplotlib.pyplot as plt
@@ -38,7 +40,7 @@ class NameDataset(Dataset):
         filename = TRAIN_NAME if is_train_set else TEST_NAME
         # filename = 'train_data_bak2.csv' if is_train_set else 'test_data_bak2.csv'
 
-        # 访问数据集，使用gzip和csv包
+
         with open(filename, 'r', encoding='utf-8') as f:
             reader = csv.reader(f, delimiter=',')  # 假设用逗号分隔
             rows = list(reader)  # 按行读取（natural，Major）
@@ -72,7 +74,7 @@ class NameDataset(Dataset):
         return self.major_num
 
 
-# DataLoade
+# DataLoader
 trainset = NameDataset(is_train_set=True)
 trainloader = DataLoader(trainset, batch_size=BATCH_SIZE, shuffle=True)
 testset = NameDataset(is_train_set=False)
@@ -270,6 +272,13 @@ if __name__ == '__main__':
             user_input = input('input:')
             if user_input == 'exit':
                 break
+            if user_input == '':
+                continue
+
+            jieba.load_userdict("stopwords.txt")
+            word_list = jieba.lcut(user_input)
+            # 去掉停用词
+            print(word_list)
             predicted_major = predict(user_input)
             print(f"预测答案: {predicted_major}")
 
